@@ -566,14 +566,31 @@ function closeModal() {
 // PWA functionality
 let deferredPrompt;
 
+// Debug PWA installability
+console.log('PWA Debug: Script loaded');
+
+// Check if app is already installed
+if (window.matchMedia('(display-mode: standalone)').matches) {
+    console.log('PWA Debug: App is already installed');
+} else {
+    console.log('PWA Debug: App is not installed');
+}
+
 window.addEventListener('beforeinstallprompt', (e) => {
+    console.log('PWA Debug: beforeinstallprompt event fired');
     e.preventDefault();
     deferredPrompt = e;
     
     const installBtn = document.getElementById('installBtn');
-    installBtn.style.display = 'flex';
+    if (installBtn) {
+        installBtn.style.display = 'flex';
+        console.log('PWA Debug: Install button shown');
+    } else {
+        console.log('PWA Debug: Install button not found');
+    }
     
     installBtn.addEventListener('click', async () => {
+        console.log('PWA Debug: Install button clicked');
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
@@ -587,7 +604,37 @@ window.addEventListener('beforeinstallprompt', (e) => {
 window.addEventListener('appinstalled', () => {
     console.log('PWA was installed');
     const installBtn = document.getElementById('installBtn');
-    installBtn.style.display = 'none';
+    if (installBtn) {
+        installBtn.style.display = 'none';
+    }
+});
+
+// Additional debug info
+window.addEventListener('load', () => {
+    if ('serviceWorker' in navigator) {
+        console.log('PWA Debug: Service Worker supported');
+    } else {
+        console.log('PWA Debug: Service Worker not supported');
+    }
+    
+    // Check manifest
+    const manifestLink = document.querySelector('link[rel="manifest"]');
+    if (manifestLink) {
+        console.log('PWA Debug: Manifest link found:', manifestLink.href);
+    } else {
+        console.log('PWA Debug: Manifest link not found');
+    }
+    
+    // Force show install button for testing (remove this in production)
+    setTimeout(() => {
+        const installBtn = document.getElementById('installBtn');
+        if (installBtn && installBtn.style.display === 'none') {
+            console.log('PWA Debug: Forcing install button to show for testing');
+            installBtn.style.display = 'flex';
+            installBtn.style.opacity = '0.5'; // Make it semi-transparent to indicate it's forced
+            installBtn.title = 'Test mode - PWA criteria not met';
+        }
+    }, 2000);
 });
 
 // Keyboard shortcuts
