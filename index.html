@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#9C88FF">
+    <title>Những Thành Phố Mơ Màng - Tìm kiếm bài hát</title>
+    <meta name ="favic" href="icons/icon-192x192.png">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Thành Phố Mơ Màng">
+    
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+    <link rel="icon" type="image/x-icon" href="icons/favicon-32x32.png">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <h1 class="logo">
+                    <img src="icons/ntpmm_logo.jpg" alt="Logo" class="logo-icon">
+                    Những Thành Phố Mơ Màng
+                </h1>
+                <div class="header-buttons">
+                    <button class="clear-cache-btn" id="clearCacheBtn" title="Xóa cache để cập nhật nội dung mới">
+                        <i class="fas fa-broom"></i>
+                        Xóa cache
+                    </button>
+                    <button class="install-btn" id="installBtn" style="display: none;">
+                        <i class="fas fa-download"></i>
+                        Cài đặt
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="container">
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="Tìm kiếm bài hát, ca sĩ, lời bài hát..."
+                            autocomplete="off"
+                        >
+                        <button class="clear-btn" id="clearBtn" style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Search Filters -->
+                    <div class="search-filters">
+                        <button class="filter-btn active" data-filter="all">
+                            <i class="fas fa-globe-asia"></i>
+                            Tất cả
+                        </button>
+                        <button class="filter-btn" data-filter="song">
+                            <i class="fas fa-music"></i>
+                            Bài hát
+                        </button>
+                        <button class="filter-btn" data-filter="artist">
+                            <i class="fas fa-microphone"></i>
+                            Ca sĩ
+                        </button>
+                        <button class="filter-btn" data-filter="lyrics">
+                            <i class="fas fa-feather-alt"></i>
+                            Lời bài hát
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section">
+            <div class="container">
+                <!-- Search Stats -->
+                <div class="search-stats" id="searchStats" style="display: none;">
+                    <span id="resultsCount">0</span> kết quả được tìm thấy
+                </div>
+
+                <!-- Loading -->
+                <div class="loading" id="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Đang tìm kiếm...</p>
+                </div>
+
+                <!-- No Results -->
+                <div class="no-results" id="noResults" style="display: none;">
+                    <div class="no-results-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Không tìm thấy kết quả</h3>
+                    <p>Hãy thử tìm kiếm với từ khóa khác</p>
+                </div>
+
+                <!-- Results List -->
+                <div class="results-list" id="resultsList">
+                    <!-- Results will be inserted here -->
+                </div>
+
+                <!-- Popular Songs (Default) -->
+                <div class="popular-section" id="popularSection">
+                    <h2 class="section-title">
+                        <span class="total-count" id="totalSongsCount"></span>
+                    </h2>
+                    <div class="collapse-controls">
+                        <button class="control-btn primary" onclick="expandAllArtists()">
+                            <i class="fas fa-expand-alt"></i>
+                            Mở rộng tất cả
+                        </button>
+                        <button class="control-btn" onclick="collapseAllArtists()">
+                            <i class="fas fa-compress-alt"></i>
+                            Thu gọn tất cả
+                        </button>
+                    </div>
+                    <div class="artists-container" id="artistsContainer">
+                        <!-- Artists and their songs will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Song Detail Modal -->
+        <div class="modal" id="songModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalSongTitle"></h3>
+                    <button class="modal-close" id="modalClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="lyrics-container">
+                        <h4>Lời bài hát:</h4>
+                        <div id="modalLyrics" class="lyrics"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p>A vide code project by <a href="https://www.linkedin.com/in/vanwminh/">pvminh</a></p>
+            </div>
+        </footer>
+
+        <!-- Keyboard Shortcuts Hint -->
+        <div class="shortcuts-hint" id="shortcutsHint">
+            <p><strong>Phím tắt:</strong></p>
+            <p>Ctrl+K: Tìm kiếm</p>
+            <p>Ctrl+E: Mở rộng tất cả</p>
+            <p>Ctrl+C: Thu gọn tất cả</p>
+            <p>Click tiêu đề ca sĩ để mở/đóng</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script src="sw-register.js"></script>
+</body>
+</html>
