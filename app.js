@@ -569,36 +569,69 @@ let deferredPrompt;
 // Debug PWA installability
 console.log('PWA Debug: Script loaded');
 
-// Check if app is already installed
-if (window.matchMedia('(display-mode: standalone)').matches) {
-    console.log('PWA Debug: App is already installed');
-} else {
+// Function to check if app is installed and hide button accordingly
+function checkAndHideInstallButton() {
+    const installBtn = document.getElementById('installBtn');
+    if (!installBtn) return;
+    
+    // Check if app is running in standalone mode (installed)
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        console.log('PWA Debug: App is running in standalone mode (installed)');
+        installBtn.style.display = 'none';
+        return true;
+    }
+    
+    // Check if app is installed via navigator
+    if (window.navigator.standalone === true) {
+        console.log('PWA Debug: App is installed (iOS standalone)');
+        installBtn.style.display = 'none';
+        return true;
+    }
+    
     console.log('PWA Debug: App is not installed');
+    return false;
 }
+
+// Check install status on load
+window.addEventListener('load', () => {
+    checkAndHideInstallButton();
+});
 
 window.addEventListener('beforeinstallprompt', (e) => {
     console.log('PWA Debug: beforeinstallprompt event fired');
     e.preventDefault();
     deferredPrompt = e;
     
-    const installBtn = document.getElementById('installBtn');
-    if (installBtn) {
-        installBtn.style.display = 'flex';
-        console.log('PWA Debug: Install button shown');
-    } else {
-        console.log('PWA Debug: Install button not found');
-    }
-    
-    installBtn.addEventListener('click', async () => {
-        console.log('PWA Debug: Install button clicked');
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User response to the install prompt: ${outcome}`);
-            deferredPrompt = null;
-            installBtn.style.display = 'none';
+    // Only show button if app is not already installed
+    if (!checkAndHideInstallButton()) {
+        const installBtn = document.getElementById('installBtn');
+        if (installBtn) {
+            installBtn.style.display = 'flex';
+            installBtn.style.opacity = '1'; // Reset opacity
+            installBtn.title = 'Install app'; // Reset title
+            console.log('PWA Debug: Install button shown');
+        } else {
+            console.log('PWA Debug: Install button not found');
         }
-    });
+        
+        // Remove any existing click listeners to avoid duplicates
+        const newInstallBtn = installBtn.cloneNode(true);
+        installBtn.parentNode.replaceChild(newInstallBtn, installBtn);
+        
+        newInstallBtn.addEventListener('click', async () => {
+            console.log('PWA Debug: Install button clicked');
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                if (outcome === 'accepted') {
+                    console.log('PWA Debug: User accepted install prompt');
+                }
+                deferredPrompt = null;
+                newInstallBtn.style.display = 'none';
+            }
+        });
+    }
 });
 
 window.addEventListener('appinstalled', () => {
@@ -607,6 +640,8 @@ window.addEventListener('appinstalled', () => {
     if (installBtn) {
         installBtn.style.display = 'none';
     }
+    // Store install status in localStorage for future sessions
+    localStorage.setItem('pwa-installed', 'true');
 });
 
 // Additional debug info
@@ -625,16 +660,14 @@ window.addEventListener('load', () => {
         console.log('PWA Debug: Manifest link not found');
     }
     
-    // Force show install button for testing (remove this in production)
-    setTimeout(() => {
+    // Check if app was previously installed (stored in localStorage)
+    if (localStorage.getItem('pwa-installed') === 'true') {
+        console.log('PWA Debug: App was previously installed');
         const installBtn = document.getElementById('installBtn');
-        if (installBtn && installBtn.style.display === 'none') {
-            console.log('PWA Debug: Forcing install button to show for testing');
-            installBtn.style.display = 'flex';
-            installBtn.style.opacity = '0.5'; // Make it semi-transparent to indicate it's forced
-            installBtn.title = 'Test mode - PWA criteria not met';
+        if (installBtn) {
+            installBtn.style.display = 'none';
         }
-    }, 2000);
+    }
 });
 
 // Keyboard shortcuts
