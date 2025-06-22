@@ -1,8 +1,8 @@
 {
   "name": "Những Thành Phố Mơ Màng",
-  "short_name": "ThanhPhoMoMang",
+  "short_name": "NTPMM",
   "description": "Khám phá những giai điệu mơ màng trong từng thành phố",
-  "start_url": "/",
+  "start_url": "/nhung-thanh-pho-mo-mang/",
   "display": "standalone",
   "background_color": "#9C88FF",
   "theme_color": "#9C88FF",
@@ -34,7 +34,7 @@
       "name": "Tìm kiếm bài hát",
       "short_name": "Search",
       "description": "Tìm kiếm những giai điệu mơ màng",
-      "url": "/?action=search",
+      "url": "/nhung-thanh-pho-mo-mang/?action=search",
       "icons": [
         {
           "src": "icons/android-chrome-192x192.png",
