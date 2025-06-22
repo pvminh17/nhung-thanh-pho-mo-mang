@@ -156,7 +156,7 @@ body::before {
     padding: 32px 0;
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url('image/background.jpg');
     background-size: cover;
-    background-position: center;
+    background-position: left;
     background-repeat: no-repeat;
     backdrop-filter: blur(5px);
     border-bottom: 1px solid rgba(255, 107, 107, 0.2);
@@ -949,7 +949,7 @@ body::before {
     }
     
     .header .container {
-        padding: 12px 16px; /* Reduce header padding on mobile */
+        padding: 27px 16px; /* Reduce header padding on mobile */
     }
     
     .search-section {
@@ -1061,7 +1061,7 @@ body::before {
     }
     
     .header .container {
-        padding: 10px 16px; /* Even more compact on very small screens */
+        padding: 15px 16px; /* Even more compact on very small screens */
     }
     
     .search-section {
