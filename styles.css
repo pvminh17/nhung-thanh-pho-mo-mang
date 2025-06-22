@@ -154,14 +154,18 @@ body::before {
 /* Search Section */
 .search-section {
     padding: 32px 0;
-    background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 50%, rgba(69, 183, 209, 0.1) 100%);
-    backdrop-filter: blur(20px);
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url('image/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(5px);
     border-bottom: 1px solid rgba(255, 107, 107, 0.2);
 }
 
 .search-container {
     max-width: 600px;
     margin: 0 auto;
+    opacity: 0.85;
 }
 
 .search-box {
