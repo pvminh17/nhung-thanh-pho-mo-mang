@@ -708,7 +708,7 @@ body::before {
 .footer-stat-number {
     font-size: 24px;
     font-weight: 700;
-    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+    background: linear-gradient(45deg,#4ECDC4, #FF6B6B );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -724,7 +724,7 @@ body::before {
 
 .footer-divider {
     height: 2px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 107, 107, 0.3) 20%, rgba(78, 205, 196, 0.5) 50%, rgba(69, 183, 209, 0.3) 80%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 107, 107, 0.3) 20%, rgba(78, 205, 196, 0.5) 50%, rgba(209, 92, 69, 0.3) 80%, transparent 100%);
     margin: 24px 0;
     border-radius: 2px;
 }
@@ -737,7 +737,7 @@ body::before {
 }
 
 .footer a {
-    background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1);
+    background: linear-gradient(45deg, #FF6B6B, #3a928c, #e6452c);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -763,7 +763,7 @@ body::before {
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #45B7D1);
+    background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #ef5941);
     transition: width 0.3s ease;
     border-radius: 1px;
 }
