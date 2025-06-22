@@ -729,7 +729,7 @@ function checkAndHideInstallButton() {
         return true;
     }
     
-    // Check if app is installed via navigator
+    // Check if app is installed via navigator (iOS Safari)
     if (window.navigator.standalone === true) {
         console.log('PWA Debug: App is installed (iOS standalone)');
         installBtn.style.display = 'none';
@@ -740,9 +740,94 @@ function checkAndHideInstallButton() {
     return false;
 }
 
+// Function to detect Safari iOS and show install instructions
+function detectSafariIOSAndShowButton() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isSafari = userAgent.includes('safari') && !userAgent.includes('chrome');
+    const isIOS = /ipad|iphone|ipod/.test(userAgent);
+    const isInstalled = window.navigator.standalone === true;
+    
+    console.log('PWA Debug: Safari iOS detection', { isSafari, isIOS, isInstalled });
+    
+    if (isIOS && isSafari && !isInstalled) {
+        const installBtn = document.getElementById('installBtn');
+        if (installBtn) {
+            installBtn.style.display = 'flex';
+            console.log('PWA Debug: Install button shown for Safari iOS');
+            
+            // Add click handler for Safari iOS
+            installBtn.addEventListener('click', () => {
+                showSafariInstallGuide();
+            });
+        }
+        return true;
+    }
+    return false;
+}
+
+// Show Safari-specific install guide
+function showSafariInstallGuide() {
+    const modal = document.createElement('div');
+    modal.className = 'install-guide-modal show';
+    modal.innerHTML = `
+        <div class="install-guide-content">
+            <div class="install-guide-header">
+                <h3>📱 Cài đặt ứng dụng trên Safari</h3>
+                <button class="install-guide-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="install-guide-body">
+                <div class="browser-status">
+                    <p>🍎 Bạn đang sử dụng Safari trên iOS!</p>
+                </div>
+                
+                <div class="install-benefits">
+                    <h4>Để cài đặt ứng dụng:</h4>
+                    <ul>
+                        <li>1️⃣ Nhấn nút <strong>Chia sẻ</strong> (📤) ở dưới cùng</li>
+                        <li>2️⃣ Cuộn xuống và chọn <strong>"Thêm vào Màn hình chính"</strong></li>
+                        <li>3️⃣ Nhấn <strong>"Thêm"</strong> để hoàn tất</li>
+                    </ul>
+                </div>
+                
+                <div class="install-actions">
+                    <button class="install-proceed-btn" onclick="this.closest('.install-guide-modal').remove();">
+                        <i class="fas fa-check"></i>
+                        Đã hiểu
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add close functionality
+    const closeBtn = modal.querySelector('.install-guide-close');
+    const proceedBtn = modal.querySelector('.install-proceed-btn');
+    
+    closeBtn.onclick = () => modal.remove();
+    proceedBtn.onclick = () => modal.remove();
+    
+    // Close on backdrop click
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    };
+    
+    document.body.appendChild(modal);
+}
+
 // Check install status on load
 window.addEventListener('load', () => {
-    checkAndHideInstallButton();
+    // First check if already installed
+    if (!checkAndHideInstallButton()) {
+        // If not installed, check if it's Safari iOS and show button
+        if (!detectSafariIOSAndShowButton()) {
+            // For other browsers, wait for beforeinstallprompt
+            console.log('PWA Debug: Waiting for beforeinstallprompt event');
+        }
+    }
 });
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -824,6 +909,20 @@ window.addEventListener('load', () => {
             installBtn.style.display = 'none';
         }
     }
+    
+    // Log browser and platform info
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isSafari = userAgent.includes('safari') && !userAgent.includes('chrome');
+    const isIOS = /ipad|iphone|ipod/.test(userAgent);
+    const isStandalone = window.navigator.standalone;
+    
+    console.log('PWA Debug: Browser info', {
+        userAgent: navigator.userAgent,
+        isSafari,
+        isIOS,
+        isStandalone,
+        supportsBeforeInstallPrompt: 'BeforeInstallPromptEvent' in window
+    });
 });
 
 // Show install guide notification
