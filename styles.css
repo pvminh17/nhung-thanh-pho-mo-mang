@@ -582,6 +582,7 @@ body::before {
     overflow-y: visible;
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 107, 107, 0.3) transparent;
+    font-weight: bolder;
 }
 
 .lyrics::-webkit-scrollbar {
