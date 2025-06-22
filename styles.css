@@ -12,6 +12,7 @@ body {
     background: linear-gradient(135deg, #FFE5E5 0%, #E5FFFE 25%, #E5F7FF 50%, #E5FFE5 75%, #FFFBE5 100%);
     min-height: 100vh;
     position: relative;
+    padding-top: 90px; /* Account for fixed header */
 }
 
 body::before {
@@ -43,17 +44,31 @@ body::before {
     background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(255, 107, 107, 0.2);
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 100;
     box-shadow: 0 2px 25px rgba(255, 107, 107, 0.15);
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    will-change: transform;
+}
+
+.header.hidden {
+    transform: translateY(-100%);
+}
+
+.header.show {
+    transform: translateY(0);
 }
 
 .header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px;
+    padding: 25px;
 }
 
 .logo {
@@ -227,7 +242,29 @@ body::before {
     justify-content: center;
     gap: 12px;
     overflow-x: auto;
-    padding: 8px 0;
+    padding: 8px 16px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+
+.search-filters::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 100%;
+    /* background: linear-gradient(to left, rgba(255, 255, 255, 0.9), transparent); */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .search-filters::after {
+        opacity: 1; /* Show gradient indicator on mobile */
+    }
 }
 
 .filter-btn {
@@ -602,6 +639,11 @@ body::before {
     border: 1px solid rgba(231, 76, 60, 0.5);
 }
 
+.cache-message.info {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.95), rgba(41, 128, 185, 0.95));
+    border: 1px solid rgba(52, 152, 219, 0.5);
+}
+
 .cache-message.show {
     transform: translateX(0);
     opacity: 1;
@@ -667,9 +709,11 @@ body::before {
 .songs-grid {
     overflow: hidden;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 16px;
     margin-top: 16px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Control buttons */
@@ -731,6 +775,44 @@ body::before {
 
 /* Mobile responsive updates */
 @media (max-width: 768px) {
+    body {
+        padding-top: 85px; /* Increased padding for better clearance */
+    }
+    
+    .header {
+        transition: transform 0.25s ease-in-out; /* Faster transition on mobile */
+    }
+    
+    .header .container {
+        padding: 12px 16px; /* Reduce header padding on mobile */
+    }
+    
+    .search-section {
+        padding: 32px 0; /* Increased padding on mobile for better clearance */
+        /* margin-top: 10px;  */
+    }
+    
+    .search-container {
+        padding-top: 10px; /* Extra padding on mobile */
+    }
+    
+    .logo {
+        font-size: 20px; /* Smaller text on tablets */
+    }
+    
+    .search-filters {
+        gap: 10px;
+        padding: 10px 12px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        justify-content: flex-start;
+    }
+    
+    .filter-btn {
+        flex-shrink: 0; /* Prevent buttons from shrinking */
+        min-width: fit-content;
+    }
+    
     .artist-header {
         flex-direction: row;
         text-align: left;
@@ -748,13 +830,13 @@ body::before {
     }
 
     .songs-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 12px;
     }
 
     .song-card {
-        padding: 6px;
-        margin-bottom: 16px;
+        padding: 12px;
+        margin-bottom: 12px;
     }
 
     .song-card h4 {
@@ -778,13 +860,46 @@ body::before {
 }
 
 @media (max-width: 480px) {
+    body {
+        padding-top: 80px; /* Increased padding for small screens */
+    }
+    
+    .header .container {
+        padding: 10px 16px; /* Even more compact on very small screens */
+    }
+    
+    .search-section {
+        padding: 28px 0; /* Increased padding on very small screens */
+        /* margin-top: 15px; */
+    }
+    
+    .search-container {
+        padding-top: 0; /* Remove extra padding on very small screens */
+    }
+    
+    .logo {
+        font-size: 18px; /* Even smaller text on small mobile */
+    }
+    
     .search-filters {
-        gap: 8px;
+        gap: 6px;
+        padding: 12px 8px;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Hide scrollbar on Firefox */
+        -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */
+    }
+    
+    .search-filters::-webkit-scrollbar {
+        display: none; /* Hide scrollbar on Chrome/Safari */
     }
 
     .filter-btn {
-        padding: 6px 12px;
+        padding: 8px 14px;
         font-size: 13px;
+        min-height: 36px; /* Ensure touch-friendly size */
+        flex-shrink: 0;
     }
 
     .popular-item {
@@ -805,15 +920,21 @@ body::before {
 
     .songs-grid {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 8px;
+        padding: 0 8px;
     }
 
     .song-card {
-        padding: 16px;
+        padding: 12px;
+        margin-bottom: 8px;
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
     }
 
     .song-card h4 {
-        font-size: 15px;
+        font-size: 14px;
+        line-height: 1.3;
     }
 
     .song-preview {
@@ -845,6 +966,66 @@ body::before {
     .highlight::before {
         border-radius: 10px;
         filter: blur(2px);
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 320px) {
+    body {
+        padding-top: 75px; /* Reduced padding for very small screens */
+    }
+    
+    .logo {
+        font-size: 16px; /* Very small text for tiny screens */
+    }
+    
+    .logo i {
+        font-size: 20px; /* Smaller icon to match */
+    }
+    
+    .songs-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        padding: 0 4px;
+        margin-top: 12px;
+    }
+
+    .song-card {
+        padding: 10px;
+        margin-bottom: 6px;
+        border-radius: 8px;
+    }
+
+    .song-card h4 {
+        font-size: 13px;
+        line-height: 1.2;
+        margin-bottom: 8px;
+    }
+
+    .song-preview {
+        font-size: 12px;
+        line-height: 1.4;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+
+    .artist-section {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .artist-header {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .artist-header img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .artist-info h3 {
+        font-size: 16px;
     }
 }
 
@@ -959,6 +1140,9 @@ body::before {
     position: relative;
     padding: 16px;
     margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0; /* Prevents overflow issues */
 }
 
 .song-card h4 {
@@ -988,4 +1172,278 @@ body::before {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* Install Guide Modal */
+.install-guide-modal {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 20px;
+}
+
+.install-guide-modal.show {
+    opacity: 1;
+}
+
+.install-guide-content {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.install-guide-modal.show .install-guide-content {
+    transform: scale(1) translateY(0);
+}
+
+.install-guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid rgba(255, 107, 107, 0.1);
+}
+
+.install-guide-header h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.install-guide-close {
+    background: rgba(255, 107, 107, 0.1);
+    border: none;
+    color: #FF6B6B;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.install-guide-close:hover {
+    background: rgba(255, 107, 107, 0.2);
+    transform: scale(1.1);
+}
+
+.install-guide-body {
+    padding: 24px;
+}
+
+.browser-status {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.browser-status p {
+    margin: 0;
+    font-weight: 500;
+    font-size: 16px;
+    color: #2D3748;
+}
+
+.install-benefits {
+    margin-bottom: 20px;
+}
+
+.install-benefits h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #2D3748;
+}
+
+.install-benefits ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.install-benefits li {
+    padding: 8px 0;
+    font-size: 15px;
+    color: #4A5568;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.install-benefits li:last-child {
+    border-bottom: none;
+}
+
+.browser-recommendation {
+    background: rgba(255, 193, 7, 0.1);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.browser-recommendation h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #B7791F;
+}
+
+.browser-recommendation p {
+    margin-bottom: 8px;
+    color: #744210;
+}
+
+.browser-recommendation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.browser-recommendation li {
+    padding: 4px 0;
+    color: #744210;
+}
+
+.install-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.install-proceed-btn {
+    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.install-proceed-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.install-proceed-btn.secondary {
+    background: linear-gradient(45deg, #9C88FF, #764ba2);
+    box-shadow: 0 4px 15px rgba(156, 136, 255, 0.3);
+}
+
+.install-proceed-btn.secondary:hover {
+    box-shadow: 0 6px 20px rgba(156, 136, 255, 0.4);
+}
+
+.install-cancel-btn {
+    background: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+    border: 1px solid rgba(108, 117, 125, 0.2);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+
+.install-cancel-btn:hover {
+    background: rgba(108, 117, 125, 0.15);
+    border-color: rgba(108, 117, 125, 0.3);
+}
+
+/* Mobile responsive for install guide */
+@media (max-width: 768px) {
+    .install-guide-modal {
+        padding: 16px;
+    }
+    
+    .install-guide-content {
+        max-height: 95vh;
+    }
+    
+    .install-guide-header {
+        padding: 20px 20px 12px;
+    }
+    
+    .install-guide-header h3 {
+        font-size: 20px;
+    }
+    
+    .install-guide-body {
+        padding: 20px;
+    }
+    
+    .install-actions {
+        flex-direction: column;
+    }
+    
+    .install-proceed-btn,
+    .install-cancel-btn {
+        flex: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .install-guide-header {
+        padding: 16px 16px 8px;
+    }
+    
+    .install-guide-header h3 {
+        font-size: 18px;
+    }
+    
+    .install-guide_body {
+        padding: 16px;
+    }
+    
+    .browser-status,
+    .browser-recommendation {
+        padding: 12px;
+    }
+    
+    .install-benefits h4,
+    .browser-recommendation h4 {
+        font-size: 16px;
+    }
+    
+    .install-proceed-btn,
+    .install-cancel-btn {
+        padding: 10px 20px;
+        font-size: 15px;
+    }
 }

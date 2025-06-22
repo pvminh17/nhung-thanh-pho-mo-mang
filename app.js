@@ -3,6 +3,11 @@ let currentFilter = 'all';
 let searchTimeout = null;
 let isSearching = false;
 
+// Header scroll behavior
+let lastScrollTop = 0;
+let scrollThreshold = 100;
+let isHeaderVisible = true;
+
 // DOM elements
 const searchInput = document.getElementById('searchInput');
 const clearBtn = document.getElementById('clearBtn');
@@ -18,10 +23,12 @@ const loading = document.getElementById('loading');
 const noResults = document.getElementById('noResults');
 const songModal = document.getElementById('songModal');
 const modalClose = document.getElementById('modalClose');
+const header = document.querySelector('.header');
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
+    setupHeaderScrollBehavior();
     // Wait for data to load before showing popular songs
     setTimeout(showPopularSongs, 500);
 });
@@ -69,6 +76,84 @@ function setupEventListeners() {
         searchInput.addEventListener('focus', () => {
             document.body.style.transform = 'scale(1)';
         });
+    }
+}
+
+// Setup header scroll behavior
+function setupHeaderScrollBehavior() {
+    let ticking = false;
+    
+    function updateHeader() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Always show header at the top
+        if (scrollTop <= scrollThreshold) {
+            showHeader();
+            lastScrollTop = scrollTop;
+            ticking = false;
+            return;
+        }
+        
+        // Show/hide header based on scroll direction
+        if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
+            // Scrolling down - hide header
+            hideHeader();
+        } else if (scrollTop < lastScrollTop) {
+            // Scrolling up - show header
+            showHeader();
+        }
+        
+        lastScrollTop = scrollTop;
+        ticking = false;
+    }
+    
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(updateHeader);
+            ticking = true;
+        }
+    }
+    
+    // Add scroll listener
+    window.addEventListener('scroll', requestTick, { passive: true });
+    
+    // Show header when search input is focused
+    if (searchInput) {
+        searchInput.addEventListener('focus', showHeader);
+    }
+    
+    // Show header when modal is opened
+    if (songModal) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'style') {
+                    const display = songModal.style.display;
+                    if (display === 'block') {
+                        showHeader();
+                    }
+                }
+            });
+        });
+        
+        observer.observe(songModal, { attributes: true });
+    }
+}
+
+// Show header
+function showHeader() {
+    if (!isHeaderVisible && header) {
+        header.classList.remove('hidden');
+        header.classList.add('show');
+        isHeaderVisible = true;
+    }
+}
+
+// Hide header
+function hideHeader() {
+    if (isHeaderVisible && header) {
+        header.classList.remove('show');
+        header.classList.add('hidden');
+        isHeaderVisible = false;
     }
 }
 
@@ -610,6 +695,9 @@ window.addEventListener('beforeinstallprompt', (e) => {
             installBtn.style.opacity = '1'; // Reset opacity
             installBtn.title = 'Install app'; // Reset title
             console.log('PWA Debug: Install button shown');
+            
+            // Show browser compatibility guide
+            showInstallGuide();
         } else {
             console.log('PWA Debug: Install button not found');
         }
@@ -620,6 +708,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
         
         newInstallBtn.addEventListener('click', async () => {
             console.log('PWA Debug: Install button clicked');
+            
+            // Show install guide before proceeding
+            const shouldProceed = await showInstallConfirmation();
+            if (!shouldProceed) return;
+            
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
@@ -669,6 +762,193 @@ window.addEventListener('load', () => {
         }
     }
 });
+
+// Show install guide notification
+function showInstallGuide() {
+    // Don't show if user has already seen it
+    if (localStorage.getItem('install-guide-shown') === 'true') return;
+    
+    const userAgent = navigator.userAgent.toLowerCase();
+    let browserName = 'trình duyệt';
+    let isSupported = true;
+    
+    if (userAgent.includes('chrome') && !userAgent.includes('edg')) {
+        browserName = 'Chrome';
+    } else if (userAgent.includes('safari') && !userAgent.includes('chrome')) {
+        browserName = 'Safari';
+    } else if (userAgent.includes('firefox')) {
+        browserName = 'Firefox';
+        isSupported = false;
+    } else if (userAgent.includes('edg')) {
+        browserName = 'Edge';
+    }
+    
+    setTimeout(() => {
+        showInstallGuideMessage(browserName, isSupported);
+        localStorage.setItem('install-guide-shown', 'true');
+    }, 1000);
+}
+
+// Show install guide message
+function showInstallGuideMessage(browserName, isSupported) {
+    const message = isSupported 
+        ? `🎉 Tuyệt vời! Bạn đang sử dụng ${browserName} - trình duyệt hỗ trợ cài đặt ứng dụng tốt!`
+        : `💡 Để cài đặt ứng dụng tốt hơn, hãy sử dụng Chrome hoặc Safari thay vì ${browserName}.`;
+    
+    const type = isSupported ? 'success' : 'info';
+    
+    // showCacheMessage(message, type);
+}
+
+// Show install confirmation with browser guide
+function showInstallConfirmation() {
+    return new Promise((resolve) => {
+        const userAgent = navigator.userAgent.toLowerCase();
+        let browserInfo = '';
+        let isOptimal = true;
+        
+        if (userAgent.includes('chrome') && !userAgent.includes('edg')) {
+            browserInfo = '✅ Chrome - Hỗ trợ cài đặt NTPMM!';
+        } else if (userAgent.includes('safari') && !userAgent.includes('chrome')) {
+            browserInfo = '✅ Safari - Hỗ trợ cài đặt NTPMM!';
+        } else if (userAgent.includes('edg')) {
+            browserInfo = '✅ Edge - Hỗ trợ cài đặt NTPMM!';
+        } else {
+            browserInfo = '⚠️ Để trải nghiệm tốt nhất, hãy sử dụng Chrome hoặc Safari';
+            isOptimal = false;
+        }
+        
+        const modal = document.createElement('div');
+        modal.className = 'install-guide-modal';
+        modal.innerHTML = `
+            <div class="install-guide-content">
+                <div class="install-guide-header">
+                    <h3>📱 Cài đặt ứng dụng</h3>
+                    <button class="install-guide-close" onclick="this.closest('.install-guide-modal').remove(); arguments[0].resolve(false);">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="install-guide-body">
+                    <div class="browser-status">
+                        <p>${browserInfo}</p>
+                    </div>
+                    
+                    <div class="install-benefits">
+                        <ul>
+                            <li>🚀 Mở nhanh hơn từ màn hình chính</li>
+                            <li>📱 Trải nghiệm như ứng dụng native</li>
+                            <li>🔄 Hoạt động offline</li>
+                            <li>🔔 Nhận thông báo cập nhật</li>
+                        </ul>
+                    </div>
+                    
+                    ${!isOptimal ? `
+                        <div class="browser-recommendation">
+                            <h4>💡 Khuyến nghị:</h4>
+                            <p>Để cài đặt và sử dụng tốt nhất, hãy mở trang này bằng:</p>
+                            <ul>
+                                <li>🌐 <strong>Chrome</strong> (Android/Desktop)</li>
+                                <li>🍎 <strong>Safari</strong> (iOS/Mac)</li>
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="install-actions">
+                        ${isOptimal ? `
+                            <button class="install-proceed-btn" onclick="this.closest('.install-guide-modal').remove(); arguments[0].resolve(true);">
+                                <i class="fas fa-download"></i>
+                                Tiếp tục cài đặt
+                            </button>
+                        ` : `
+                            <button class="install-proceed-btn secondary" onclick="this.closest('.install-guide-modal').remove(); arguments[0].resolve(true);">
+                                <i class="fas fa-download"></i>
+                                Vẫn muốn cài đặt
+                            </button>
+                        `}
+                        <button class="install-cancel-btn" onclick="this.closest('.install-guide-modal').remove(); arguments[0].resolve(false);">
+                            Để sau
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add click handlers with resolve function
+        const proceedBtn = modal.querySelector('.install-proceed-btn');
+        const cancelBtn = modal.querySelector('.install-cancel-btn');
+        const closeBtn = modal.querySelector('.install-guide-close');
+        
+        if (proceedBtn) {
+            proceedBtn.onclick = () => {
+                modal.remove();
+                resolve(true);
+            };
+        }
+        
+        if (cancelBtn) {
+            cancelBtn.onclick = () => {
+                modal.remove();
+                resolve(false);
+            };
+        }
+        
+        if (closeBtn) {
+            closeBtn.onclick = () => {
+                modal.remove();
+                resolve(false);
+            };
+        }
+        
+        // Close on backdrop click
+        modal.onclick = (e) => {
+            if (e.target === modal) {
+                modal.remove();
+                resolve(false);
+            }
+        };
+        
+        document.body.appendChild(modal);
+        
+        // Show with animation
+        setTimeout(() => modal.classList.add('show'), 10);
+    });
+}
+
+// Update cache message function to support info type
+function showCacheMessage(message, type) {
+    // Remove any existing message
+    const existingMessage = document.querySelector('.cache-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    // Create message element
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `cache-message ${type}`;
+    
+    let icon = 'info-circle';
+    if (type === 'success') icon = 'check-circle';
+    if (type === 'error') icon = 'exclamation-circle';
+    
+    messageDiv.innerHTML = `
+        <div class="message-content">
+            <i class="fas fa-${icon}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    // Add to page
+    document.body.appendChild(messageDiv);
+    
+    // Show with animation
+    setTimeout(() => messageDiv.classList.add('show'), 100);
+    
+    // Auto remove after delay
+    setTimeout(() => {
+        messageDiv.classList.remove('show');
+        setTimeout(() => messageDiv.remove(), 300);
+    }, type === 'info' ? 6000 : 4000); // Show info messages longer
+}
 
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
