@@ -245,13 +245,13 @@ body::before {
     gap: 6px;
     backdrop-filter: blur(10px);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    /* box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4); */
     transition: all 0.3s ease;
 }
 
 .filter-btn:hover {
     background: linear-gradient(45deg, rgb(250, 75, 75), rgb(248, 152, 120));
-    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+    /* box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5); */
     /* transform: translateY(-5px); */
 }
 
