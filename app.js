@@ -637,7 +637,70 @@ function openSongModal(title, artist) {
     if (!song) return;
     
     document.getElementById('modalSongTitle').textContent = song.title;
-    document.getElementById('modalLyrics').textContent = song.lyrics || 'Lời bài hát không có sẵn.';
+    
+    // Format lyrics for better readability
+    const lyricsElement = document.getElementById('modalLyrics');
+    const rawLyrics = song.lyrics || 'Lời bài hát không có sẵn.';
+      if (rawLyrics === 'Lời bài hát không có sẵn.') {
+        lyricsElement.textContent = rawLyrics;
+    } else {
+        // Format the lyrics with proper line breaks and spacing
+        const lines = rawLyrics
+            // Split by various line break patterns
+            .split(/[\r\n]+/)
+            // Remove empty lines at the beginning and end
+            .map(line => line.trim())
+            // Filter out completely empty lines but keep lines with just spaces
+            .filter(line => line.length > 0);
+          // Create formatted HTML with alternating colors for each line
+        const formattedHTML = lines.map((line, index) => {
+            // Define color classes for alternating lines
+            const colorClass = index % 5 === 0 ? 'lyrics-line-1' : 
+                              index % 5 === 1 ? 'lyrics-line-2' : 
+                              index % 5 === 2 ? 'lyrics-line-3' : 
+                              index % 5 === 3 ? 'lyrics-line-4' : 'lyrics-line-5';
+            
+            // Check if this line starts a new verse (after punctuation)
+            const isNewVerse = index > 0 && /[.!?]$/.test(lines[index - 1]);
+            const marginClass = isNewVerse ? 'lyrics-verse-break' : '';
+            
+            return `<div class="lyrics-line ${colorClass} ${marginClass}">${line}</div>`;
+        }).join('');
+        
+        // Use innerHTML with colored lines
+        lyricsElement.innerHTML = formattedHTML;
+        
+        // Add CSS styles if not already added
+        if (!document.getElementById('lyrics-styles')) {
+            const style = document.createElement('style');
+            style.id = 'lyrics-styles';
+            style.textContent = `
+                .lyrics-line {
+                    line-height: 1.6;
+                    padding: 2px 0;
+                    transition: all 0.2s ease;
+                }
+                .lyrics-line:hover {
+                    transform: translateX(5px);
+                    font-weight: 500;
+                }                .lyrics-line-1 { color: #e2e8f0; } /* Light Gray */
+                .lyrics-line-2 { color: #a7f3d0; } /* Light Green */
+                .lyrics-line-3 { color: #fde68a; } /* Light Yellow */
+                .lyrics-line-4 { color: #bfdbfe; } /* Light Blue */
+                .lyrics-line-5 { color: #fbb6ce; } /* Light Pink */
+                .lyrics-verse-break {
+                    margin-top: 12px;
+                }
+                .lyrics-line {
+                    cursor: pointer;
+                }
+                .lyrics-line:active {
+                    transform: scale(0.98);
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
     
     songModal.style.display = 'block';
     document.body.style.overflow = 'hidden';
