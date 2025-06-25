@@ -678,7 +678,6 @@ function openSongModal(title, artist) {
                 .lyrics-line {
                     line-height: 1.6;
                     padding: 2px 0;
-                    transition: all 0.2s ease;
                 }
                 
                 .lyrics-line-1 { color: #e2e8f0; } /* Light Gray */
@@ -689,12 +688,7 @@ function openSongModal(title, artist) {
                 .lyrics-verse-break {
                     margin-top: 12px;
                 }
-                .lyrics-line {
-                    cursor: pointer;
-                }
-                .lyrics-line:active {
-                    transform: scale(0.98);
-                }
+                
             `;
             document.head.appendChild(style);
         }
