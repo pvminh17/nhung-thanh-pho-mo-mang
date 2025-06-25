@@ -58,13 +58,28 @@ function setupEventListeners() {
             setActiveFilter(e.target.dataset.filter);
             handleSearch();
         });
-    });
-
-    // Modal
+    });    // Modal
     modalClose.addEventListener('click', closeModal);
     songModal.addEventListener('click', (e) => {
         if (e.target === songModal) closeModal();
     });
+
+    // Prevent background scrolling when modal is open
+    function preventBackgroundScroll(e) {
+        if (songModal.style.display === 'block') {
+            // Allow scrolling only if the event target is within modal content
+            const modalContent = songModal.querySelector('.modal-content');
+            if (!modalContent || !modalContent.contains(e.target)) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }
+    }
+    
+    // Add scroll prevention only for document/window level scrolling
+    document.addEventListener('wheel', preventBackgroundScroll, { passive: false });
+    document.addEventListener('touchmove', preventBackgroundScroll, { passive: false });
 
     // Escape key to close modal
     document.addEventListener('keydown', (e) => {
@@ -636,6 +651,12 @@ function openSongModal(title, artist) {
     const song = getAllSongs().find(s => s.title === title && s.artist === artist);
     if (!song) return;
     
+    // Store current scroll position
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollTop}px`;
+    document.body.style.width = '100%';
+    
     document.getElementById('modalSongTitle').textContent = song.title;
     
     // Format lyrics for better readability
@@ -691,16 +712,23 @@ function openSongModal(title, artist) {
                 
             `;
             document.head.appendChild(style);
-        }
-    }
+        }    }
     
     songModal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
     songModal.style.display = 'none';
-    document.body.style.overflow = '';
+    
+    // Restore scroll position
+    const scrollTop = document.body.style.top;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    
+    if (scrollTop) {
+        window.scrollTo(0, parseInt(scrollTop || '0') * -1);
+    }
 }
 
 // PWA functionality
