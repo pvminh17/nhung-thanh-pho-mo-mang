@@ -1369,15 +1369,15 @@ body::before {
 
     .modal-body {
         background: linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.9) 100%);
-        padding: 24px 24px 80px 24px;
+        padding: 24px 10px 80px 10px;
     }
 
     .lyrics {
         background: none;
         color: #F7FAFC;
         border: none;
-        font-size: 16px;
-        line-height: 1.9;
+        font-size: 15.5px;
+        line-height: 2;
         padding: 0 0 60px 0;
     }
 

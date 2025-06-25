@@ -696,8 +696,8 @@ function openSongModal(title, artist) {
             style.id = 'lyrics-styles';
             style.textContent = `
                 .lyrics-line {
-                    line-height: 1.6;
-                    padding: 2px 0;
+                    line-height: 2;
+                    padding: 0px 0;
                     text-align: center;
                 }
                 
