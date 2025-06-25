@@ -669,8 +669,7 @@ function openSongModal(title, artist) {
         
         // Use innerHTML with colored lines
         lyricsElement.innerHTML = formattedHTML;
-        
-        // Add CSS styles if not already added
+          // Add CSS styles if not already added
         if (!document.getElementById('lyrics-styles')) {
             const style = document.createElement('style');
             style.id = 'lyrics-styles';
@@ -678,6 +677,7 @@ function openSongModal(title, artist) {
                 .lyrics-line {
                     line-height: 1.6;
                     padding: 2px 0;
+                    text-align: center;
                 }
                 
                 .lyrics-line-1 { color: #e2e8f0; } /* Light Gray */
