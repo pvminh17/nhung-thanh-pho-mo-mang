@@ -680,10 +680,8 @@ function openSongModal(title, artist) {
                     padding: 2px 0;
                     transition: all 0.2s ease;
                 }
-                .lyrics-line:hover {
-                    transform: translateX(5px);
-                    font-weight: 500;
-                }                .lyrics-line-1 { color: #e2e8f0; } /* Light Gray */
+                
+                .lyrics-line-1 { color: #e2e8f0; } /* Light Gray */
                 .lyrics-line-2 { color: #a7f3d0; } /* Light Green */
                 .lyrics-line-3 { color: #fde68a; } /* Light Yellow */
                 .lyrics-line-4 { color: #bfdbfe; } /* Light Blue */
