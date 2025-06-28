@@ -13,8 +13,8 @@ html, body {
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background: linear-gradient(135deg, #FFE5E5 0%, #E5FFFE 25%, #E5F7FF 50%, #E5FFE5 75%, #FFFBE5 100%);
+    color: #F7FAFC;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     min-height: 100vh;
     position: relative;
     padding-top: 90px; /* Account for fixed header */
@@ -28,12 +28,12 @@ body::before {
     width: 100%;
     height: 100%;
     background:
-        radial-gradient(circle at 20% 80%, rgba(255, 229, 229, 0.9) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(229, 255, 254, 0.9) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(229, 247, 255, 0.8) 0%, transparent 50%),
-        radial-gradient(circle at 60% 80%, rgba(255, 251, 229, 0.8) 0%, transparent 50%),
-        radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.6) 0%, transparent 30%),
-        radial-gradient(circle at 10% 90%, rgba(255, 255, 255, 0.6) 0%, transparent 30%);
+        radial-gradient(circle at 20% 80%, rgba(44, 62, 80, 0.7) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(52, 73, 94, 0.7) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(44, 62, 80, 0.6) 0%, transparent 50%),
+        radial-gradient(circle at 60% 80%, rgba(52, 73, 94, 0.6) 0%, transparent 50%),
+        radial-gradient(circle at 90% 10%, rgba(0, 0, 0, 0.4) 0%, transparent 30%),
+        radial-gradient(circle at 10% 90%, rgba(0, 0, 0, 0.4) 0%, transparent 30%);
     pointer-events: none;
     z-index: -1;
 }
@@ -46,7 +46,7 @@ body::before {
 
 /* Header */
 .header {
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(255, 107, 107, 0.2);
     position: fixed;
@@ -304,22 +304,23 @@ body::before {
 /* Results Section */
 .results-section {
     padding: 5px 0 80px;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
     backdrop-filter: blur(10px);
     min-height: 60vh;
 }
 
 .search-stats {
     margin-bottom: 32px;
-    color: #4A5568;
+    color: #CBD5E0;
     font-size: 16px;
     font-weight: 600;
     text-align: center;
-    background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(78, 205, 196, 0.2) 100%);
     padding: 16px 24px;
     border-radius: 20px;
-    border: 2px solid rgba(255, 107, 107, 0.15);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 2px solid rgba(255, 107, 107, 0.25);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     max-width: 400px;
     margin-left: auto;
     margin-right: auto;
@@ -355,18 +356,18 @@ body::before {
 .no-results {
     text-align: center;
     padding: 60px 20px;
-    color: #666;
+    color: #CBD5E0;
 }
 
 .no-results-icon {
     font-size: 48px;
-    color: #ddd;
+    color: #718096;
     margin-bottom: 16px;
 }
 
 .no-results h3 {
     margin-bottom: 8px;
-    color: #333;
+    color: #F7FAFC;
 }
 
 /* Results List */
@@ -380,11 +381,11 @@ body::before {
 }
 
 .highlight {
-    background: rgba(255, 207, 84, 0.25);
+    background: rgba(255, 207, 84, 0.4);
     padding: 0;
     border-radius: 6px;
     font-weight: 600;
-    color: #374151;
+    color: #1A202C;
     box-shadow: none;
     border: none;
     text-shadow: none;
@@ -407,7 +408,7 @@ body::before {
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 24px;
-    color: #333;
+    color: #F7FAFC;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -429,12 +430,13 @@ body::before {
 }
 
 .popular-item {
-    background: white;
+    background: #2c3e50;
+    color: white;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(156, 136, 255, 0.1);
     cursor: pointer;
-    border: 1px solid rgba(156, 136, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .popular-image {
@@ -451,11 +453,11 @@ body::before {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 4px;
-    color: #333;
+    color: #F7FAFC;
 }
 
 .popular-content p {
-    color: #666;
+    color: #CBD5E0;
     font-size: 14px;
 }
 
@@ -476,6 +478,7 @@ body::before {
 
 .modal-content {
     background: rgba(255, 255, 255, 0.95);
+    color: #2D3748;
     backdrop-filter: blur(20px);
     margin: 0;
     padding: 0;
@@ -486,7 +489,7 @@ body::before {
     max-height: none;
     overflow-y: auto;
     box-shadow: none;
-    border: none;
+    border: 2px solid rgba(78, 205, 196, 0.3);
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -502,7 +505,7 @@ body::before {
     border-bottom: 2px solid rgba(255, 107, 107, 0.15);
     position: sticky;
     top: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 229, 229, 0.9) 100%);
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.9) 100%);
     backdrop-filter: blur(20px);
     z-index: 10;
     border-radius: 0;
@@ -548,7 +551,7 @@ body::before {
 
 .modal-body {
     padding: 32px 32px 80px 32px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(229, 255, 254, 0.8) 50%, rgba(229, 247, 255, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.9) 100%);
     flex-grow: 1;
     overflow-y: auto;
 }
@@ -579,7 +582,7 @@ body::before {
     line-height: 2;
     white-space: pre-wrap;
     font-size: 20px;
-    color: #1A202C;
+    color: #F7FAFC;
     border: none;
     backdrop-filter: none;
     box-shadow: none;
@@ -590,7 +593,7 @@ body::before {
     max-height: none;
     overflow-y: visible;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 107, 107, 0.3) transparent;
+    scrollbar-color: rgba(78, 205, 196, 0.4) transparent;
     font-weight: bolder;
 }
 
@@ -599,17 +602,17 @@ body::before {
 }
 
 .lyrics::-webkit-scrollbar-track {
-    background: rgba(255, 107, 107, 0.1);
+    background: rgba(78, 205, 196, 0.2);
     border-radius: 10px;
 }
 
 .lyrics::-webkit-scrollbar-thumb {
-    background: rgba(255, 107, 107, 0.3);
+    background: rgba(78, 205, 196, 0.4);
     border-radius: 10px;
 }
 
 .lyrics::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 107, 107, 0.5);
+    background: rgba(78, 205, 196, 0.6);
 }
 
 /* Footer */
@@ -839,11 +842,12 @@ body::before {
 }
 
 .artist-section {
-    background: rgba(255, 255, 255, 0.95);
+    background: #2c3e50;
+    color: white;
     border-radius: 16px;
     padding: 24px;
     box-shadow: 0 8px 32px rgba(255, 107, 107, 0.2);
-    border: 2px solid rgba(78, 205, 196, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
     margin-bottom: 24px;
 }
@@ -922,7 +926,7 @@ body::before {
 .artist-info h3 {
     font-size: 24px;
     font-weight: 600;
-    color: #2D3748;
+    color: #F7FAFC;
     margin-bottom: 4px;
     background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
     -webkit-background-clip: text;
@@ -1351,72 +1355,6 @@ body::before {
     }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    body {
-        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    }
-
-    .header {
-        background: rgba(0, 0, 0, 0.8);
-    }
-
-    .results-section {
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-    }
-
-    .artist-section,
-    .popular-item {
-        background: #2c3e50;
-        color: white;
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .modal-content {
-        background: rgba(255, 255, 255, 0.95);
-        color: #2D3748;
-        border-color: rgba(78, 205, 196, 0.3);
-    }
-
-    .modal-header {
-        background: linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.9) 100%);
-    }
-
-    .modal-header h3 {
-        background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .modal-body {
-        background: linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.9) 100%);
-        padding: 24px 10px 80px 10px;
-    }
-
-    .lyrics {
-        background: none;
-        color: #F7FAFC;
-        border: none;
-        font-size: 15.5px;
-        line-height: 2;
-        padding: 0 0 60px 0;
-    }
-
-    .lyrics::-webkit-scrollbar-track {
-        background: rgba(78, 205, 196, 0.2);
-    }
-
-    .lyrics::-webkit-scrollbar-thumb {
-        background: rgba(78, 205, 196, 0.4);
-    }
-
-    .lyrics::-webkit-scrollbar-thumb:hover {
-        background: rgba(78, 205, 196, 0.6);
-    }
-}
-
 /* Keyboard shortcuts hint */
 .shortcuts-hint {
     position: fixed;
@@ -1456,10 +1394,11 @@ body::before {
 }
 
 .song-card {
-    background: rgba(255, 255, 255, 0.95);
+    background: #2c3e50;
+    color: white;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(255, 107, 107, 0.12);
-    border: 1px solid rgba(78, 205, 196, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
     backdrop-filter: blur(10px);
     position: relative;
@@ -1477,7 +1416,7 @@ body::before {
 .song-card h4 {
     font-size: 16px;
     font-weight: 600;
-    color: #2D3748;
+    color: #F7FAFC;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
@@ -1491,7 +1430,7 @@ body::before {
 }
 
 .song-preview {
-    color: #4A5568;
+    color: #CBD5E0;
     font-size: 14px;
     line-height: 1.5;
     margin-top: 8px;
